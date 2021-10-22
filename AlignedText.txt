@@ -1,0 +1,30 @@
+Gradle is 
+an open-so
+urce build
+ automatio
+n tool foc
+used, on f
+lexibility
+ and perfo
+rmance. Gr
+adle build
+ scripts a
+re written
+ using a G
+roovy or K
+otlin DSL.
+  Read abo
+ut Gradle 
+features t
+o learn wh
+at is poss
+ible with 
+Gradle. On
+ce you obt
+ain an ite
+rator, it 
+points to 
+the first 
+element of
+ a collect
+ion.

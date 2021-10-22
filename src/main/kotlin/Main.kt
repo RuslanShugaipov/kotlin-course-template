@@ -1,6 +1,11 @@
-fun main(args: Array<String>) {
-    println("Hello World!")
+import alignment.*
 
-    // Try adding program arguments at Run/Debug configuration
-    println("Program arguments: ${args.joinToString()}")
+fun main() {
+//    println("Enter the line width: ")
+//    var lineWidth: Int? = readLine()!!.toIntOrNull()
+//    while(lineWidth == null){
+//        println("Enter the correct value!")
+//        lineWidth = readLine()!!.toIntOrNull()
+//    }
+    alignText("TextToAlign3.txt", 1, Alignment.LEFT)
 }
