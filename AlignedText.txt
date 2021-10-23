@@ -1,5 +1,0 @@
-Gradle is an open-source build automation tool focused, on flexi
-bility and performance. Gradle build scripts are written using a
- Groovy or Kotlin DSL.  Read about Gradle features to learn what
- is possible with Gradle. Once you obtain an iterator, it points
- to the first element of a collection.
