@@ -7,5 +7,5 @@ fun main() {
 //        println("Enter the correct value!")
 //        lineWidth = readLine()!!.toIntOrNull()
 //    }
-    alignText("TextToAlign1.txt", 64, Alignment.LEFT)
+    alignText("TextToAlign1.txt", 6, Alignment.LEFT)
 }

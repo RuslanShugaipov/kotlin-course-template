@@ -4,7 +4,10 @@ import java.io.File
 
 //enum class with alignment types
 enum class Alignment {
-    LEFT
+    LEFT,
+    RIGHT,
+    CENTER,
+    JUSTIFY
 }
 
 //function calling the required alignment type
@@ -13,9 +16,18 @@ fun alignText(fileName: String, lineWidth: Int, alignment: Alignment) {
         when (alignment) {
             Alignment.LEFT -> {
                 alignTextLeft(fileName, lineWidth)
-                print("Aligned text in the file AlignedText.txt.")
+            }
+            Alignment.RIGHT -> {
+                alignTextRight(fileName, lineWidth)
+            }
+            Alignment.CENTER -> {
+                alignTextCenter(fileName, lineWidth)
+            }
+            Alignment.JUSTIFY -> {
+                alignTextJustify(fileName, lineWidth)
             }
         }
+        print("\nAligned text in the file AlignedText.txt.")
     }
     catch (message: Exception){
         println(message)
@@ -31,77 +43,60 @@ fun alignTextLeft(fileName: String, lineWidth: Int) {
 
     val writer = File("AlignedText.txt").bufferedWriter()
     var currentLineWidth = 0
+    val punctuationMarks = listOf(".", ",", "?", "!", ";", ":", "...",
+        ")", "]", "}", "'", "\"", ">")
 
     for(line in lineList) {
         //split a string from the source text into separate parts (words)
         val parts = line.split(Regex("\\s+"))
-
         for(part in parts) {
-            if(currentLineWidth > 0) {
-                var isLastSpace = false
-                if(currentLineWidth < lineWidth) {
-                    writer.write(" ")
-                    if (currentLineWidth == lineWidth - 1)
-                        isLastSpace = true
-                    ++currentLineWidth
-                }
-                if(currentLineWidth == lineWidth) {
-                    writer.newLine()
-                    currentLineWidth = 0
-                    if(!isLastSpace) {
-                        writer.write(" ")
-                        currentLineWidth = 1
-                    }
-                }
-
-                if(currentLineWidth + part.length > lineWidth) {
-                    writer.write(part.substring(0, lineWidth - currentLineWidth))
-                    writer.newLine()
-                    var index = lineWidth - currentLineWidth
-                    currentLineWidth = 0
-                    while(index < part.length) {
-                        if(part.length - index <= lineWidth) {
-                            writer.write(part.substring(index))
-                            currentLineWidth = part.length - index
-                            break
-                        }
-                        else {
-                            writer.write((part.substring(index, index + lineWidth)))
-                            writer.write("\n")
-                            index += lineWidth
-                        }
-                    }
-                    continue
-                }
-            }
-            else if(part.length >= lineWidth) {
-                //if the length of the word is equal to the length of the string,
-                //then just insert it and move to the next part
-                if(part.length == lineWidth) {
-                    writer.write(part)
-                    writer.newLine()
-                    continue
-                }
-
+            if(part == "")
+                continue
+            if(part.length + currentLineWidth >= lineWidth){
                 var index = 0
-                while(index + lineWidth <= part.length) {
-                    writer.write(part.substring(index, index + lineWidth))
-                    writer.newLine()
-                    index += lineWidth
-                    currentLineWidth = 0
-                }
-                if(index != part.length) {
-                    writer.write(part.substringAfter(part[index - 1]))
-                    currentLineWidth = part.substringAfter(part[index - 1]).length
+                while(part.length - index > 0) {
+                    if(part.length - index < lineWidth - currentLineWidth) {
+                        writer.write(part.substring(index, part.length))
+                        writer.write(" ")
+                        currentLineWidth = part.substring(index, part.length).length + 1
+                        if(currentLineWidth == lineWidth) {
+                            writer.newLine()
+                            currentLineWidth = 0
+                        }
+                        break
+                    }
+                    else {
+                        writer.write(part.substring(index, index + (lineWidth - currentLineWidth)))
+                        writer.newLine()
+                        index += lineWidth - currentLineWidth
+                        currentLineWidth = 0
+                    }
                 }
                 continue
             }
-            //if the current length of the string equals zero and the word fits in the string
-            currentLineWidth += part.length
             writer.write(part)
+            currentLineWidth += part.length
+            writer.write(" ")
+            ++currentLineWidth
+            if(currentLineWidth == lineWidth) {
+                writer.newLine()
+                currentLineWidth = 0
+            }
         }
     }
     writer.close()
+}
+
+//function that aligns a text to the right
+fun alignTextRight(fileName: String, lineWidth: Int){
+}
+
+//function that aligns a text to the center
+fun alignTextCenter(fileName: String, lineWidth: Int){
+}
+
+//function that aligns a text to the width (justify)
+fun alignTextJustify(fileName: String, lineWidth: Int){
 }
 
 //function that reads lines of text into a list of strings
