@@ -11,23 +11,25 @@ enum class Alignment {
 }
 
 //function calling the required alignment type
-fun alignText(fileName: String, lineWidth: Int, alignment: Alignment) {
+fun alignText(fileName: String, lineWidth: Int, alignment: Alignment): String {
+    var toConsole = ""
     try {
             when (alignment) {
-                Alignment.LEFT -> { alignTextLeft(fileName, lineWidth) }
+                Alignment.LEFT -> { toConsole = alignTextLeft(fileName, lineWidth) }
 //                Alignment.RIGHT -> { alignTextRight(fileName, lineWidth) }
 //                Alignment.CENTER -> { alignTextCenter(fileName, lineWidth) }
 //                Alignment.JUSTIFY -> { alignTextJustify(fileName, lineWidth) }
             }
-        print("\nAligned text in the file AlignedText.txt.")
+        print("Aligned text in the file AlignedText.txt.\n")
     }
     catch (message: Exception){
         println(message)
     }
+    return toConsole
 }
 
 //function that aligns a text to the left
-fun alignTextLeft(fileName: String, lineWidth: Int) {
+fun alignTextLeft(fileName: String, lineWidth: Int): String {
     if(lineWidth <= 0)
         throw IllegalArgumentException("\u001B[31m" + "Invalid line width value!")
     //creating mutable list of strings
@@ -38,6 +40,7 @@ fun alignTextLeft(fileName: String, lineWidth: Int) {
     val punctuationMarks = listOf('.', ',', '?', '!', ';', ':',
         ')', ']', '}', '\'', '\"', '>')
     var isMark = false
+    var toConsole = ""
 
     for(line in lineList) {
         //split a string from the source text into separate parts (words)
@@ -47,17 +50,19 @@ fun alignTextLeft(fileName: String, lineWidth: Int) {
             //construction for adding spaces between words
             if((0 < currentLineWidth) && (currentLineWidth < lineWidth)) {
                 writer.write(" ")
+                toConsole += " "
                 ++currentLineWidth
             }
             //if the length of the string is too small, then in the loop
             //we divide the word and insert it until the remaining length
             //of the word becomes less than the width of the line. At the
             //end, we add what's left
-            if(part.length + currentLineWidth >= lineWidth){
+            if(part.length + currentLineWidth > lineWidth){
                 var index = 0
                 while(part.length - index >= 1) {
-                    if(part.length - index < lineWidth - currentLineWidth) {
+                    if(part.length - index <= lineWidth - currentLineWidth) {
                         writer.write(part.substring(index, part.length))
+                        toConsole += part.substring(index, part.length)
                         currentLineWidth = part.substring(index, part.length).length
                         break
                     }
@@ -72,6 +77,8 @@ fun alignTextLeft(fileName: String, lineWidth: Int) {
                             writer.write(part.substring(index, index + (lineWidth - currentLineWidth)))
                             writer.newLine()
                             writer.write(part.substring(part.length - 2, part.length))
+                            toConsole += part.substring(index, index + (lineWidth - currentLineWidth)) +
+                                         "\n" + part.substring(part.length - 2, part.length)
                             currentLineWidth = 2
                             isMark = false
                             break
@@ -79,6 +86,7 @@ fun alignTextLeft(fileName: String, lineWidth: Int) {
                         else {
                             writer.write(part.substring(index, index + (lineWidth - currentLineWidth)))
                             writer.newLine()
+                            toConsole += part.substring(index, index + (lineWidth - currentLineWidth)) + "\n"
                             index += lineWidth - currentLineWidth
                             currentLineWidth = 0
                             isMark = false
@@ -89,10 +97,12 @@ fun alignTextLeft(fileName: String, lineWidth: Int) {
             }
             //if the word fits into the line without any problems
             writer.write(part)
+            toConsole += part
             currentLineWidth += part.length
         }
     }
     writer.close()
+    return toConsole
 }
 
 ////function that aligns a text to the right
