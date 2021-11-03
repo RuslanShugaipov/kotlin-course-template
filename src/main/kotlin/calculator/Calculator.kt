@@ -1,13 +1,11 @@
 package calculator
 
-import java.beans.Expression
-import java.io.File
 import java.util.*
 import kotlin.math.pow
 
 class OperationPriority {
     companion object {
-        private val Level_5: List<String> = listOf("u-")
+        private val Level_5: List<String> = listOf("u-", "u+")
         private val Level_4: List<String> = listOf("^")
         private val Level_3: List<String> = listOf("*", "/")
         private val Level_2: List<String> = listOf("+", "-")
@@ -48,10 +46,11 @@ fun getRPN(expression: String): String{
             if(!operationStack.empty()) {
                 run loop@{
                     operationStack.withIndex().reversed().forEach { operation ->
-                        if(inputArray[i] == '-' && (operationStack.peek() == "-" || operationStack.peek() == "+" || operationStack.peek() == "" || operationStack.peek() == "u-"))
+                        if(inputArray[i] == '-' || inputArray[i] == '+' && (operationStack.peek() == "-" || operationStack.peek() == "+" || operationStack.peek() == "" || operationStack.peek() == "u-"))
                             unary = false
-                        if(unary && inputArray[i] == '-' && (operationStack.peek() == "(" || operationStack.peek() == "*" || operationStack.peek() == "/"|| operationStack.peek() == "^")){
-                            operationStack.push("u-")
+                        if(unary && (inputArray[i] == '-' || inputArray[i] == '+')&& (operationStack.peek() == "(" || operationStack.peek() == "*" || operationStack.peek() == "/"|| operationStack.peek() == "^")){
+                            if(inputArray[i] == '-') operationStack.push("u-")
+                            else operationStack.push("u+")
                             unary = false
                             return@loop
                         }
@@ -66,6 +65,7 @@ fun getRPN(expression: String): String{
             }
             else{
                 if(inputArray[i] == '-') operationStack.push("u-")
+                else if(inputArray[i] == '+') operationStack.push("u+")
                 else operationStack.push(inputArray[i].toString())
             }
         }
@@ -95,6 +95,7 @@ fun calculate(input: String): Float{
                 "/" -> operationResult = leftOperand / rightOperand
                 "^" -> operationResult = leftOperand.pow(rightOperand)
                 "u-" -> operationResult = rightOperand * (-1)
+                "u+" -> operationResult = rightOperand
             }
             result.push(operationResult.toString())
         }
