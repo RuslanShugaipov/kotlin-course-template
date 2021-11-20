@@ -6,8 +6,6 @@ import java.io.File
 fun alignTextLeft(text: String, lineWidth: Int): String {
     if (lineWidth <= 0)
         throw IllegalArgumentException("Invalid line width value!")
-    if(text == "")
-        throw Exception("There is no text to align!")
 
     val lines = text.split('\n')
     var currentLineWidth = 0

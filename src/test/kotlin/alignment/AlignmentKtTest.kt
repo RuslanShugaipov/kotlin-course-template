@@ -11,9 +11,9 @@ internal class AlignmentKtTest {
         alignTextLeft("Something", -1)
     }
 
-    @Test(expected = Exception::class)
+    @Test
     fun `checking for empty text at the input`() {
-        alignTextLeft("", 20)
+        Assert.assertEquals("",alignTextLeft("", 20))
     }
 
     @Test(expected = FileNotFoundException::class)
