@@ -1,43 +1,33 @@
 package matrix
 
 class Matrix(
-    _m: Int,
-    _n: Int,
+    val m: Int,
+    val n: Int,
+    val matrix: Array<Array<Double>> = Array(m, { Array(n, { 0.0 }) })
 ) {
-    private val m: Int
-    private val n: Int
-    private val matrix: Array<Array<Double>>
 
     init {
-        if (_m <= 0) {
+        if (m <= 0) {
             error("Incorrect number of rows of the matrix!")
-        } else {
-            m = _m
         }
-        if (_n <= 0) {
+        if (n <= 0) {
             error("Incorrect number of rows of the matrix!")
-        } else {
-            n = _n
         }
-        matrix = Array(m, { Array(n, { 0.0 }) })
-    }
-
-    fun setValues(values: Array<Array<Double>>) {
         var isMatch = false
-        for (rowIndex in 0 until values.size) {
-            if (values[rowIndex].size != n)
+        for (rowIndex in 0 until m) {
+            if (matrix[rowIndex].size != n)
                 break
-            if (rowIndex == values.size - 1) {
+            if (rowIndex == matrix.size - 1) {
                 isMatch = true
             }
         }
         if (isMatch) {
             for (rowIndex in 0 until m) {
                 for (columnIndex in 0 until n)
-                    set(rowIndex, columnIndex, values[rowIndex][columnIndex])
+                    set(rowIndex, columnIndex, matrix[rowIndex][columnIndex])
             }
         } else {
-            error("The dimensions of the matrices do not match!")
+            error("Invalid initialization!")
         }
     }
 
@@ -49,13 +39,9 @@ class Matrix(
         matrix[rowIndex][columnIndex] = value
     }
 
-    fun getDimension(): List<Int> {
-        return listOf(m, n)
-    }
-
     operator fun plus(other: Matrix): Matrix {
         val sum = Matrix(m, n)
-        if (other.getDimension()[0] == m && other.getDimension()[1] == n) {
+        if (other.m == m && other.n== n) {
             for (rowIndex in 0 until m) {
                 for (columnIndex in 0 until n) {
                     sum[rowIndex, columnIndex] = get(rowIndex, columnIndex) + other[rowIndex, columnIndex]
@@ -69,7 +55,7 @@ class Matrix(
 
     operator fun minus(other: Matrix): Matrix {
         val difference = Matrix(m, n)
-        if (other.getDimension()[0] == m && other.getDimension()[1] == n) {
+        if (other.m == m && other.n == n) {
             for (rowIndex in 0 until m) {
                 for (columnIndex in 0 until n) {
                     difference[rowIndex, columnIndex] = get(rowIndex, columnIndex) - other[rowIndex, columnIndex]
@@ -92,11 +78,11 @@ class Matrix(
     }
 
     operator fun div(scalar: Double): Matrix {
+        if(scalar == 0.0)
+            error("Division by zero!")
         val quotient = Matrix(m, n)
         for (rowIndex in 0 until m) {
             for (columnIndex in 0 until n) {
-                if(get(rowIndex, columnIndex) == 0.0)
-                    error("Division by zero!")
                 quotient[rowIndex, columnIndex] = get(rowIndex, columnIndex) / scalar
             }
         }
@@ -104,7 +90,7 @@ class Matrix(
     }
 
     operator fun plusAssign(other: Matrix) {
-        if (other.getDimension()[0] == m && other.getDimension()[1] == n) {
+        if (other.m == m && other.n == n) {
             for (rowIndex in 0 until m) {
                 for (columnIndex in 0 until n) {
                     set(rowIndex, columnIndex, get(rowIndex, columnIndex) + other[rowIndex, columnIndex])
@@ -116,7 +102,7 @@ class Matrix(
     }
 
     operator fun minusAssign(other: Matrix) {
-        if (other.getDimension()[0] == m && other.getDimension()[1] == n) {
+        if (other.m == m && other.n == n) {
             for (rowIndex in 0 until m) {
                 for (columnIndex in 0 until n) {
                     set(rowIndex, columnIndex, get(rowIndex, columnIndex) - other[rowIndex, columnIndex])
@@ -136,10 +122,10 @@ class Matrix(
     }
 
     operator fun divAssign(scalar: Double) {
+        if(scalar == 0.0)
+            error("Division by zero!")
         for (rowIndex in 0 until m) {
             for (columnIndex in 0 until n) {
-                if(get(rowIndex, columnIndex) == 0.0)
-                    error("Division by zero!")
                 set(rowIndex, columnIndex, get(rowIndex, columnIndex) / scalar)
             }
         }
@@ -151,10 +137,6 @@ class Matrix(
 
     operator fun unaryPlus(): Matrix {
         return this
-    }
-
-    override fun equals(other: Any?): Boolean {
-        return this.toString() == other.toString()
     }
 
     override fun toString(): String {
@@ -171,7 +153,23 @@ class Matrix(
         return elements
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Matrix
+
+        if (m != other.m) return false
+        if (n != other.n) return false
+        if (!matrix.contentDeepEquals(other.matrix)) return false
+
+        return true
+    }
+
     override fun hashCode(): Int {
-        return this.hashCode()
+        var result = m
+        result = 31 * result + n
+        result = 31 * result + matrix.contentDeepHashCode()
+        return result
     }
 }
