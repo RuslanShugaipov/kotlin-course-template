@@ -1,36 +1,27 @@
 package matrix
 
 class Matrix(
-    val m: Int,
-    val n: Int,
-    val matrix: Array<Array<Double>> = Array(m, { Array(n, { 0.0 }) })
+    val matrix: Array<Array<Double>> = Array(3, { Array(3, {0.0}) })
 ) {
 
     init {
-        if (m <= 0) {
-            error("Incorrect number of rows of the matrix!")
-        }
-        if (n <= 0) {
-            error("Incorrect number of rows of the matrix!")
-        }
         var isMatch = false
-        for (rowIndex in 0 until m) {
-            if (matrix[rowIndex].size != n)
+        for (rowIndex in 0 until matrix.size) {
+            if (matrix[rowIndex].size != matrix[0].size)
                 break
             if (rowIndex == matrix.size - 1) {
                 isMatch = true
             }
         }
         if (isMatch) {
-            for (rowIndex in 0 until m) {
-                for (columnIndex in 0 until n)
+            for (rowIndex in 0 until matrix.size) {
+                for (columnIndex in 0 until matrix[0].size)
                     set(rowIndex, columnIndex, matrix[rowIndex][columnIndex])
             }
         } else {
             error("Invalid initialization!")
         }
     }
-
     operator fun get(rowIndex: Int, columnIndex: Int): Double {
         return matrix[rowIndex][columnIndex]
     }
@@ -40,10 +31,10 @@ class Matrix(
     }
 
     operator fun plus(other: Matrix): Matrix {
-        val sum = Matrix(m, n)
-        if (other.m == m && other.n== n) {
-            for (rowIndex in 0 until m) {
-                for (columnIndex in 0 until n) {
+        val sum = Matrix(other.matrix)
+        if (other.matrix.size == matrix.size && other.matrix[0].size == matrix[0].size) {
+            for (rowIndex in 0 until other.matrix.size) {
+                for (columnIndex in 0 until other.matrix[0].size) {
                     sum[rowIndex, columnIndex] = get(rowIndex, columnIndex) + other[rowIndex, columnIndex]
                 }
             }
@@ -54,10 +45,10 @@ class Matrix(
     }
 
     operator fun minus(other: Matrix): Matrix {
-        val difference = Matrix(m, n)
-        if (other.m == m && other.n == n) {
-            for (rowIndex in 0 until m) {
-                for (columnIndex in 0 until n) {
+        val difference = Matrix(other.matrix)
+        if (other.matrix.size == matrix.size && other.matrix[0].size == matrix[0].size) {
+            for (rowIndex in 0 until other.matrix.size) {
+                for (columnIndex in 0 until other.matrix[0].size) {
                     difference[rowIndex, columnIndex] = get(rowIndex, columnIndex) - other[rowIndex, columnIndex]
                 }
             }
@@ -68,9 +59,9 @@ class Matrix(
     }
 
     operator fun times(scalar: Double): Matrix {
-        val product = Matrix(m, n)
-        for (rowIndex in 0 until m) {
-            for (columnIndex in 0 until n) {
+        val product = Matrix(matrix)
+            for (rowIndex in 0 until matrix.size) {
+                for (columnIndex in 0 until matrix[0].size) {
                 product[rowIndex, columnIndex] = get(rowIndex, columnIndex) * scalar
             }
         }
@@ -80,9 +71,9 @@ class Matrix(
     operator fun div(scalar: Double): Matrix {
         if(scalar == 0.0)
             error("Division by zero!")
-        val quotient = Matrix(m, n)
-        for (rowIndex in 0 until m) {
-            for (columnIndex in 0 until n) {
+        val quotient = Matrix(matrix)
+            for (rowIndex in 0 until matrix.size) {
+                for (columnIndex in 0 until matrix[0].size) {
                 quotient[rowIndex, columnIndex] = get(rowIndex, columnIndex) / scalar
             }
         }
@@ -90,9 +81,9 @@ class Matrix(
     }
 
     operator fun plusAssign(other: Matrix) {
-        if (other.m == m && other.n == n) {
-            for (rowIndex in 0 until m) {
-                for (columnIndex in 0 until n) {
+        if (other.matrix.size == matrix.size && other.matrix[0].size == matrix[0].size) {
+            for (rowIndex in 0 until other.matrix.size) {
+                for (columnIndex in 0 until other.matrix[0].size) {
                     set(rowIndex, columnIndex, get(rowIndex, columnIndex) + other[rowIndex, columnIndex])
                 }
             }
@@ -102,9 +93,9 @@ class Matrix(
     }
 
     operator fun minusAssign(other: Matrix) {
-        if (other.m == m && other.n == n) {
-            for (rowIndex in 0 until m) {
-                for (columnIndex in 0 until n) {
+        if (other.matrix.size == matrix.size && other.matrix[0].size == matrix[0].size) {
+            for (rowIndex in 0 until other.matrix.size) {
+                for (columnIndex in 0 until other.matrix[0].size) {
                     set(rowIndex, columnIndex, get(rowIndex, columnIndex) - other[rowIndex, columnIndex])
                 }
             }
@@ -114,8 +105,8 @@ class Matrix(
     }
 
     operator fun timesAssign(scalar: Double) {
-        for (rowIndex in 0 until m) {
-            for (columnIndex in 0 until n) {
+            for (rowIndex in 0 until matrix.size) {
+                for (columnIndex in 0 until matrix[0].size) {
                 set(rowIndex, columnIndex, get(rowIndex, columnIndex) * scalar)
             }
         }
@@ -124,8 +115,8 @@ class Matrix(
     operator fun divAssign(scalar: Double) {
         if(scalar == 0.0)
             error("Division by zero!")
-        for (rowIndex in 0 until m) {
-            for (columnIndex in 0 until n) {
+            for (rowIndex in 0 until matrix.size) {
+                for (columnIndex in 0 until matrix[0].size) {
                 set(rowIndex, columnIndex, get(rowIndex, columnIndex) / scalar)
             }
         }
@@ -141,13 +132,13 @@ class Matrix(
 
     override fun toString(): String {
         var elements = ""
-        for (rowIndex in 0 until m) {
-            for (columnIndex in 0 until n) {
+            for (rowIndex in 0 until matrix.size) {
+                for (columnIndex in 0 until matrix[0].size) {
                 elements += "${get(rowIndex, columnIndex)}"
-                if(columnIndex < n - 1)
+                if(columnIndex < matrix[0].size - 1)
                     elements += " "
             }
-            if(rowIndex < m - 1)
+            if(rowIndex < matrix.size - 1)
                 elements += '\n'
         }
         return elements
@@ -159,16 +150,16 @@ class Matrix(
 
         other as Matrix
 
-        if (m != other.m) return false
-        if (n != other.n) return false
+        if (matrix.size != other.matrix.size) return false
+        if (matrix[0].size != other.matrix[0].size) return false
         if (!matrix.contentDeepEquals(other.matrix)) return false
 
         return true
     }
 
     override fun hashCode(): Int {
-        var result = m
-        result = 31 * result + n
+        var result = matrix.size
+        result = 31 * result + matrix[0].size
         result = 31 * result + matrix.contentDeepHashCode()
         return result
     }
