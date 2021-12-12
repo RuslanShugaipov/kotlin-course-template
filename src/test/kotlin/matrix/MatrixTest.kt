@@ -4,12 +4,17 @@ import org.junit.Assert
 import org.junit.Test
 
 class MatrixTest {
-    private var matrixB = Matrix(3, 3)
-    private var matrixA = Matrix(3, 4)
-    private var matrixC = Matrix(3, 3)
+    private var matrixB = Matrix()
+    private var matrixA = Matrix()
+    private var matrixC = Matrix()
 
     @Test(expected = Exception::class)
     fun `checking the overloaded operator + for exception`() {
+        matrixB = Matrix( arrayOf(
+            arrayOf(0.0, 1.0, 2.0),
+            arrayOf(3.0, 4.0, 5.0),
+            arrayOf(6.0, 7.0, 8.0, 9.0)
+        ))
         matrixC = matrixB + matrixA
     }
 
@@ -20,13 +25,13 @@ class MatrixTest {
             arrayOf(0.0, 0.0, 0.0),
             arrayOf(0.0, 0.0, 0.0)
         )
-        matrixC = Matrix(3, 3, arrayOf(
+        matrixC = Matrix( arrayOf(
                 arrayOf(0.0, -1.0, -2.0),
                 arrayOf(-3.0, -4.0, -5.0),
                 arrayOf(-6.0, -7.0, -8.0)
             )
         )
-        matrixB = Matrix(3, 3, arrayOf(
+        matrixB = Matrix( arrayOf(
                 arrayOf(0.0, 1.0, 2.0),
                 arrayOf(3.0, 4.0, 5.0),
                 arrayOf(6.0, 7.0, 8.0)
@@ -48,6 +53,12 @@ class MatrixTest {
 
     @Test(expected = Exception::class)
     fun `checking the overloaded operator - for exception`() {
+        matrixB = Matrix( arrayOf(
+            arrayOf(0.0, 1.0, 2.0),
+            arrayOf(3.0, 4.0, 5.0),
+            arrayOf(6.0, 7.0, 8.0, 9.0)
+        )
+        )
         matrixC = matrixB - matrixA
     }
 
@@ -58,13 +69,13 @@ class MatrixTest {
             arrayOf(0.0, 0.0, 0.0),
             arrayOf(0.0, 0.0, 0.0)
         )
-        matrixC = Matrix(3, 3, arrayOf(
+        matrixC = Matrix(arrayOf(
                 arrayOf(0.0, 1.0, 2.0),
                 arrayOf(3.0, 4.0, 5.0),
                 arrayOf(6.0, 7.0, 8.0)
             )
         )
-        matrixB = Matrix(3, 3, arrayOf(
+        matrixB = Matrix( arrayOf(
                 arrayOf(0.0, 1.0, 2.0),
                 arrayOf(3.0, 4.0, 5.0),
                 arrayOf(6.0, 7.0, 8.0)
@@ -91,7 +102,7 @@ class MatrixTest {
             arrayOf(6.0, 8.0, 10.0),
             arrayOf(12.0, 14.0, 16.0)
         )
-        matrixC = Matrix(3,3, arrayOf(
+        matrixC = Matrix(arrayOf(
                 arrayOf(0.0, 1.0, 2.0),
                 arrayOf(3.0, 4.0, 5.0),
                 arrayOf(6.0, 7.0, 8.0)
@@ -118,7 +129,7 @@ class MatrixTest {
             arrayOf(1.5, 2.0, 2.5),
             arrayOf(3.0, 3.5, 4.0)
         )
-        matrixC = Matrix(3,3, arrayOf(
+        matrixC = Matrix(arrayOf(
                 arrayOf(0.0, 1.0, 2.0),
                 arrayOf(3.0, 4.0, 5.0),
                 arrayOf(6.0, 7.0, 8.0)
@@ -134,7 +145,7 @@ class MatrixTest {
 
     @Test
     fun `checking the toString method`() {
-        matrixA = Matrix(3,4, arrayOf(
+        matrixA = Matrix(arrayOf(
                 arrayOf(0.0, 1.0, 2.0, 3.0),
                 arrayOf(4.0, 5.0, 6.0, 7.0),
                 arrayOf(8.0, 9.0, 10.0, 11.0)
