@@ -1,47 +1,48 @@
 //import alignment.*
 //import calculator.*
 //import shape.*
-import matrix.*
+//import matrix.*
+import library.*
 
 fun main() {
     try {
-//        Code for the alignment (lab 1)
-//        print(alignTextLeft("", 8))
-
-//        Code for the calculator (lab 2)
-//        println("Result: ${calculate(getRPN("3+1"))}")
-
-//        Code for the shape (lab 3)
-//        val triangle = ShapeFactorImpl().createTriangle(1.0, 2.0, 3.0)
-//        val randomCircle = ShapeFactorImpl().createRandomCircle()
-//        val randomShape = ShapeFactorImpl().createRandomShape()
-//        println("The total area of all figures: (${triangle.calcArea() + randomCircle.calcArea() + randomShape.calcArea()})")
-//        println("The total perimeter of all figures: (${triangle.calcPerimeter() + randomCircle.calcPerimeter() + randomShape.calcPerimeter()})")
-//        when (val maxArea = maxOf(triangle.calcArea(), randomCircle.calcArea(), randomShape.calcArea())) {
-//            triangle.calcArea() -> println("The ${triangle::class.java.simpleName} has the largest area (${maxArea})")
-//            randomCircle.calcArea() -> println("The ${randomCircle::class.java.simpleName} has the largest area (${maxArea})")
-//            randomShape.calcArea() -> println("The ${randomShape::class.java.simpleName} shape has the largest area (${maxArea})")
-//        }
-//        when (val minPerimeter =
-//            minOf(triangle.calcPerimeter(), randomCircle.calcPerimeter(), randomShape.calcPerimeter())) {
-//            triangle.calcPerimeter() -> println("The ${triangle::class.java.simpleName} has the smallest perimeter (${minPerimeter})")
-//            randomCircle.calcPerimeter() -> println("The ${randomCircle::class.java.simpleName} has the smallest perimeter (${minPerimeter})")
-//            randomShape.calcPerimeter() -> println("The ${randomShape::class.java.simpleName} has the smallest perimeter (${minPerimeter})")
-//        }
-
-//        Code for the matrix (lab 4)
-        val matrixA = Matrix(3, 3, arrayOf(
-            arrayOf(0.0, 1.0, 2.0),
-            arrayOf(3.0, 4.0, 5.0),
-            arrayOf(6.0, 7.0, 8.0)
-        ))
-        val matrixB = Matrix(3, 3)
-        matrixA[2, 1] = 9.0
-        println(matrixA[2, 1])
-        println("Dimension of the matrix (n x m): ${matrixA.m} x ${matrixA.n}")
-        println(matrixB[2, 1])
-        println(matrixA == matrixB)
-        print(matrixA.toString())
+//        Code for the library (lab 5)
+        val newLibrary = LibraryServiceImpl()
+        val book1 = Book("Harry Potter and the Philosopher's Stone", listOf(Author("Joanne", "Kathleen", "Rowling")), Genre.Fantasy, Year(1997))
+        val book2 = Book("The fellowship of the ring", listOf(Author("John", "Ronald", "Tolkien")), Genre.Fantasy, Year(1954))
+        val book3 = Book("1984", listOf(Author("Orwell", "George", "")), Genre.Classic, Year(1949))
+        val book4 = Book("Neuromancer", listOf(Author("Gibson", "William", "Ford")), Genre.Cyberpunk, Year(1984))
+        newLibrary.addBook(book1)
+        newLibrary.addBook(book2)
+        newLibrary.addBook(book3)
+        newLibrary.addBook(book4)
+        val findBook1 = newLibrary.findBooks("Harry", year = Year(1997))
+        println("\nFilter: Year: 1997, Title includes: Harry (Default genre is Classic)\nFound books:")
+        if(findBook1.isEmpty())
+            println("\tNone")
+        else
+            findBook1.forEach{book ->
+            println(newLibrary.bookInfo(book))
+            }
+        val findBook2 = newLibrary.findBooks("The")
+        println("\nFilter: Title includes: The (Default genre is Classic)\nFound books:")
+        if(findBook2.isEmpty())
+            println("\tNone")
+        else
+            findBook2.forEach{book ->
+            println(newLibrary.bookInfo(book))
+            }
+        println(newLibrary.getBookStatus(book1)::class.java.simpleName)
+        val user1 = User("Jack", "London")
+        val user2 = User("Ivan", "Drozd")
+        newLibrary.registerUser(user1)
+        newLibrary.registerUser(user2)
+        newLibrary.registerUser(user1)
+        newLibrary.takeBook(user1, book1)
+        newLibrary.takeBook(user1, book2)
+        newLibrary.takeBook(user1, book3)
+        newLibrary.takeBook(user2, book4)
+        newLibrary.unregisterUser(user1)
     } catch (message: Exception) {
         println(message)
     }
