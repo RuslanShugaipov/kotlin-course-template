@@ -21,7 +21,7 @@ class OperationAction {
             return -1
         }
 
-        fun isOperation(operation: String): Boolean{
+        fun isOperation(operation: String): Boolean {
             if (LEVEL_5.contains(operation)) return true
             if (LEVEL_4.contains(operation)) return true
             if (LEVEL_3.contains(operation)) return true
@@ -73,39 +73,43 @@ fun getRPN(expression: String): String {
         //If there is a closing parenthesis, then we read operations from the stack to the output
         //string until we meet an opening parenthesis
         else if (inputArray[i] == ')') {
-            run loop@{
-                operationStack.withIndex().reversed().forEach { operation ->
-                    if (operation.value == "(") {
-                        operationStack.pop(); return@loop
-                    } else postfixString += " " + operationStack.pop()
-                }
+            val operationsList = operationStack.reversed()
+            for (operation in operationsList) {
+                if (operation == "(") {
+                    operationStack.pop()
+                    break
+                } else postfixString += " " + operationStack.pop()
             }
         } else {
             //If the stack is not empty, then we perform manipulations with the current operation
             //relative to the operations contained in the stack
             if (operationStack.isNotEmpty() && OperationAction.isOperation(inputArray[i].toString())) {
-                run loop@{
-                    operationStack.withIndex().reversed().forEach { operation ->
-                        if ((inputArray[i] == '-' || inputArray[i] == '+') &&
-                            (operationStack.peek() == "-" || operationStack.peek() == "+" || operationStack.peek() == "" || operationStack.peek() == "u-")) {
-                            unary = false
-                        }
-                        if (unary && (inputArray[i] == '-' || inputArray[i] == '+' || functionName.isNotEmpty()) && (operationStack.peek() == "(" || operationStack.peek() == "*" || operationStack.peek() == "/" || operationStack.peek() == "^")) {
-                            if (inputArray[i] == '-') operationStack.push("u-")
-                            else if (inputArray[i] == '+') operationStack.push("u+")
-                            else operationStack.push(functionName)
-                            unary = false
-                            return@loop
-                        }
-                        if (OperationAction.getPriority(operation.value) >= OperationAction.getPriority(
-                                inputArray[i].toString())) {
-                            postfixString += " " + operationStack.pop()
-                        } else {
-                            operationStack.push(inputArray[i].toString()); return@loop
-                        }
-                        if (operationStack.empty()) {
-                            operationStack.push(inputArray[i].toString()); return@loop
-                        }
+                val operationsList = operationStack.reversed()
+                for (operation in operationsList) {
+                    if ((inputArray[i] == '-' || inputArray[i] == '+') &&
+                        (operationStack.peek() == "-" || operationStack.peek() == "+" || operationStack.peek() == "" || operationStack.peek() == "u-")
+                    ) {
+                        unary = false
+                    }
+                    if (unary && (inputArray[i] == '-' || inputArray[i] == '+' || functionName.isNotEmpty()) && (operationStack.peek() == "(" || operationStack.peek() == "*" || operationStack.peek() == "/" || operationStack.peek() == "^")) {
+                        if (inputArray[i] == '-') operationStack.push("u-")
+                        else if (inputArray[i] == '+') operationStack.push("u+")
+                        else operationStack.push(functionName)
+                        unary = false
+                        break
+                    }
+                    if (OperationAction.getPriority(operation) >= OperationAction.getPriority(
+                            inputArray[i].toString()
+                        )
+                    ) {
+                        postfixString += " " + operationStack.pop()
+                    } else {
+                        operationStack.push(inputArray[i].toString())
+                        break
+                    }
+                    if (operationStack.empty()) {
+                        operationStack.push(inputArray[i].toString())
+                        break
                     }
                 }
             }
@@ -115,7 +119,7 @@ fun getRPN(expression: String): String {
                 if (inputArray[i] == '-' && postfixString.isEmpty()) operationStack.push("u-")
                 else if (inputArray[i] == '+' && postfixString.isEmpty()) operationStack.push("u+")
                 else if (functionName.isNotEmpty()) operationStack.push(functionName)
-                else if(OperationAction.isOperation(inputArray[i].toString())) operationStack.push(inputArray[i].toString())
+                else if (OperationAction.isOperation(inputArray[i].toString())) operationStack.push(inputArray[i].toString())
             }
         }
         ++i
