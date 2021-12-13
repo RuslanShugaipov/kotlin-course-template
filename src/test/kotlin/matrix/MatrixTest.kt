@@ -4,9 +4,9 @@ import org.junit.Assert
 import org.junit.Test
 
 class MatrixTest {
-    private var matrixB = Matrix()
-    private var matrixA = Matrix()
-    private var matrixC = Matrix()
+    private var matrixB = Matrix(arrayOf(arrayOf()))
+    private var matrixA = Matrix(arrayOf(arrayOf()))
+    private var matrixC = Matrix(arrayOf(arrayOf()))
 
     @Test(expected = Exception::class)
     fun `checking the overloaded operator + for exception`() {
