@@ -26,7 +26,7 @@ interface LibraryService {
     fun getAllBooks(): List<Book>
     fun getAllAvailableBooks(): List<Book>
 
-    fun getBookStatus(book: Book): Status
+    fun getBookStatus(book: Book): Status?
     fun getAllBookStatuses(): Map<Book, Status>
 
     fun setBookStatus(book: Book, status: Status)
@@ -49,11 +49,15 @@ class LibraryServiceImpl : LibraryService {
     private val userBooks = mutableMapOf<User, MutableList<Book>>()
     private val books = mutableMapOf<Book, Status>()
 
-    fun findBooks(substring: String, author: Author = Author("", "", ""),
-                  year: Year = Year(0), genre: Genre = Genre.Classic): List<Book>{
+    fun findBooks(
+        substring: String, author: Author = Author("", "", ""),
+        year: Year = Year(0), genre: Genre = Genre.Classic
+    ): List<Book> {
         val foundBooks = arrayListOf<Book>()
-        for((key, _) in books) {
-            if(key.title.lowercase().contains(substring.lowercase()) || key.authors.contains(author) || key.year == year || key.genre == genre) {
+        for ((key, _) in books) {
+            if (key.title.lowercase()
+                    .contains(substring.lowercase()) || key.authors.contains(author) || key.year == year || key.genre == genre
+            ) {
                 foundBooks.add(key)
             }
         }
@@ -62,7 +66,7 @@ class LibraryServiceImpl : LibraryService {
 
     override fun getAllBooks(): List<Book> {
         val allBooks = arrayListOf<Book>()
-        for((key, _) in books) {
+        for ((key, _) in books) {
             allBooks.add(key)
         }
         return allBooks
@@ -70,24 +74,20 @@ class LibraryServiceImpl : LibraryService {
 
     override fun getAllAvailableBooks(): List<Book> {
         val allAvailableBooks = arrayListOf<Book>()
-        for((key, value) in books) {
-            if(value == Status.Available) {
+        for ((key, value) in books) {
+            if (value == Status.Available) {
                 allAvailableBooks.add(key)
             }
         }
         return allAvailableBooks
     }
 
-    override fun getBookStatus(book: Book): Status {
-        return books.getOrDefault(book, Status.ComingSoon)
+    override fun getBookStatus(book: Book): Status? {
+        return books[book]
     }
 
     override fun getAllBookStatuses(): Map<Book, Status> {
-        val allBookStatuses = mutableMapOf<Book, Status>()
-        for((key, value) in books) {
-            allBookStatuses[key] = value
-        }
-        return allBookStatuses
+        return books.toMap()
     }
 
     override fun setBookStatus(book: Book, status: Status) {
@@ -95,17 +95,14 @@ class LibraryServiceImpl : LibraryService {
     }
 
     override fun addBook(book: Book) {
-        if (books.containsKey(book)){
-            println("This book is already in the library.")
+        if (books.containsKey(book)) {
             return
         }
         setBookStatus(book, Status.Available)
-        println("The book \"${book.title}\" has been successfully added.")
     }
 
     override fun sendForRestoration(user: User, book: Book) {
-        if(userBooks[user]!!.contains(book)){
-            println("The book is in the user's possession.")
+        if (userBooks[user]!!.contains(book)) {
             return
         }
         books[book] = Status.Restoration
@@ -116,40 +113,27 @@ class LibraryServiceImpl : LibraryService {
     }
 
     override fun registerUser(user: User) {
-        if(users.contains(user)){
-            println("The user ${user.name} ${user.surname} is already registered.")
+        if (users.contains(user)) {
             return
         }
         users.add(user)
         userBooks[user] = mutableListOf()
-        println("The user ${user.name} ${user.surname} has been successfully registered.")
     }
 
     override fun unregisterUser(user: User) {
-        if(!users.contains(user)){
-            println("The user is not registered.")
+        if (!users.contains(user)) {
             return
         }
         var bookIndex = userBooks[user]!!.size - 1
-        while(userBooks[user]!!.size != 0){
+        while (userBooks[user]!!.size != 0) {
             returnBook(user, userBooks[user]!![bookIndex--])
         }
         userBooks.remove(user)
         users.remove(user)
-        println("The user ${user.name} ${user.surname} has been successfully unregistered.")
     }
 
     override fun takeBook(user: User, book: Book) {
-        if(userBooks[user]?.size == 3){
-            println("The limit on issued books had been exceeded.")
-            return
-        }
-        if(!users.contains(user)){
-            println("The issue of the book is possible only for registered users.")
-            return
-        }
-        if(getBookStatus(book) != Status.Available) {
-            println("The book is not available.")
+        if (userBooks[user]?.size == 3 || !users.contains(user) || getBookStatus(book) != Status.Available) {
             return
         }
         userBooks[user]?.add(book)
@@ -161,14 +145,14 @@ class LibraryServiceImpl : LibraryService {
         setBookStatus(book, Status.Available)
     }
 
-    override fun bookInfo(book: Book) : String {
+    override fun bookInfo(book: Book): String {
         var info = ""
         info += "\tTitle: ${book.title}, author: "
-        book.authors.forEach{author ->
-            info += if(author.patronymic.isNotEmpty())
-                "${author.surname} ${author.firstName.substring(0,1)}.${author.patronymic.substring(0,1)}., "
+        book.authors.forEach { author ->
+            info += if (author.patronymic.isNotEmpty())
+                "${author.surname} ${author.firstName.substring(0, 1)}.${author.patronymic.substring(0, 1)}., "
             else
-                "${author.surname} ${author.firstName.substring(0,1)}., "
+                "${author.surname} ${author.firstName.substring(0, 1)}., "
         }
         info += "genre: ${book.genre}, year: ${book.year.year}"
         return info
