@@ -1,9 +1,9 @@
 package matrix
 
 class Matrix(
-    val matrix: Array<Array<Double>> = Array(3, { Array(3, {0.0}) })
+    initMatrix: Array<Array<Double>>
 ) {
-
+    private val matrix = Array(initMatrix.size){Array(initMatrix[0].size) {0.0} }
     init {
         var isMatch = false
         for (rowIndex in 0 until matrix.size) {
@@ -16,7 +16,7 @@ class Matrix(
         if (isMatch) {
             for (rowIndex in 0 until matrix.size) {
                 for (columnIndex in 0 until matrix[0].size)
-                    set(rowIndex, columnIndex, matrix[rowIndex][columnIndex])
+                    set(rowIndex, columnIndex, initMatrix[rowIndex][columnIndex])
             }
         } else {
             error("Invalid initialization!")
