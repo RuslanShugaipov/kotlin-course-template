@@ -4,8 +4,6 @@ class ShapeCollector<T : Shape> {
     private val allShapes = mutableListOf<T>()
 
     fun add(new: T) {
-        if (allShapes.contains(new))
-            error("This item is already stored.")
         allShapes.add(new)
     }
 
@@ -19,7 +17,8 @@ class ShapeCollector<T : Shape> {
         return allShapes
     }
 
-    fun getAllSorted(comparator: Comparator<T>): List<T> {
+    //обеспечивается контрвариантность
+    fun getAllSorted(comparator: Comparator<in T>): List<T> {
         return allShapes.sortedWith(comparator)
     }
 
@@ -35,50 +34,26 @@ class ShapeCollector<T : Shape> {
 
 class ShapeComparators {
     fun <T : Shape> sortAreaDesc() = Comparator<T> { shape1, shape2 ->
-        when {
-            (shape1.calcArea() > shape2.calcArea()) -> -1
-            (shape1.calcArea() == shape2.calcArea()) -> 0
-            else -> 1
-        }
+        shape2.calcArea().compareTo(shape1.calcArea())
     }
 
     fun <T : Shape> sortAreaAsc() = Comparator<T> { shape1, shape2 ->
-        when {
-            (shape1.calcArea() < shape2.calcArea()) -> -1
-            (shape1.calcArea() == shape2.calcArea()) -> 0
-            else -> 1
-        }
+        shape1.calcArea().compareTo(shape2.calcArea())
     }
 
     fun <T : Shape> sortPerimeterDesc() = Comparator<T> { shape1, shape2 ->
-        when {
-            (shape1.calcPerimeter() > shape2.calcPerimeter()) -> -1
-            (shape1.calcPerimeter() == shape2.calcPerimeter()) -> 0
-            else -> 1
-        }
+        shape2.calcPerimeter().compareTo(shape1.calcPerimeter())
     }
 
     fun <T : Shape> sortPerimeterAsc() = Comparator<T> { shape1, shape2 ->
-        when {
-            (shape1.calcPerimeter() < shape2.calcPerimeter()) -> -1
-            (shape1.calcPerimeter() == shape2.calcPerimeter()) -> 0
-            else -> 1
-        }
+        shape1.calcPerimeter().compareTo(shape2.calcPerimeter())
     }
 
     fun sortRadiusDesc() = Comparator<Circle> { circle1, circle2 ->
-        when {
-            (circle1.radius > circle2.radius) -> -1
-            (circle1.radius == circle2.radius) -> 0
-            else -> 1
-        }
+        circle2.radius.compareTo(circle1.radius)
     }
 
     fun sortRadiusAsc() = Comparator<Circle> { circle1, circle2 ->
-        when {
-            (circle1.radius < circle2.radius) -> -1
-            (circle1.radius == circle2.radius) -> 0
-            else -> 1
-        }
+        circle1.radius.compareTo(circle2.radius)
     }
 }
