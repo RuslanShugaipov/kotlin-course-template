@@ -73,7 +73,7 @@ class Triangle(
     val sideC: Double
 ) : Shape {
     init {
-        if (sideA <= 0 || sideB <= 0 || sideC <= 0 || ((sideA + sideB) < sideC || (sideA + sideC) < sideB || (sideB + sideC) < sideA)) {
+        if (sideA <= 0 || sideB <= 0 || sideC <= 0 || ((sideA + sideB) <= sideC || (sideA + sideC) <= sideB || (sideB + sideC) <= sideA)) {
             error("Incorrect side value!")
         }
     }
@@ -120,19 +120,19 @@ class ShapeFactorImpl : ShapeFactory {
     }
 
     override fun createRandomCircle(): Circle {
-        return Circle(Random.nextDouble(0.0, Double.MAX_VALUE))
+        return Circle(Random.nextDouble(0.0, 100.0))
     }
 
     override fun createRandomSquare(): Square {
-        return Square(Random.nextDouble(0.0, Double.MAX_VALUE))
+        return Square(Random.nextDouble(0.0, 100.0))
     }
 
     override fun createRandomRectangle(): Rectangle {
-        return Rectangle(Random.nextDouble(0.0, Double.MAX_VALUE), Random.nextDouble(0.0, Double.MAX_VALUE))
+        return Rectangle(Random.nextDouble(0.0, 100.0), Random.nextDouble(0.0, 100.0))
     }
 
     override fun createRandomTriangle(): Triangle {
-        return Triangle(Random.nextDouble(0.0, Double.MAX_VALUE), Random.nextDouble(0.0, Double.MAX_VALUE), Random.nextDouble(0.0, Double.MAX_VALUE))
+        return Triangle(Random.nextDouble(0.0, 100.0), Random.nextDouble(0.0, 100.0), Random.nextDouble(0.0, 100.0))
     }
 
     override fun createRandomShape(): Shape {
